@@ -1,0 +1,4 @@
+interface:
+  display_name: "CTF Correct Flags"
+  short_description: "Correct CTF flags from a report supplied for each run"
+  default_prompt: "Use $ctf-correct-flags to audit and correct the mission I name; ask me for the artifact path for this run if I have not supplied it."

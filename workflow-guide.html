@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A visual guide to ctf-correct-flags: supply a report for each run, confirm the Cisco CTF mission, audit PASS rows, correct CHANGED rows, and verify the evidence.">
+  <title>CTF Correct Flags · Workflow guide</title>
+  <style>
+    :root{--ink:#142d35;--muted:#52686f;--paper:#f5f8f7;--card:#fff;--line:#d6e3df;--teal:#006b60;--mint:#d9f2e7;--blue:#245ca5;--blue-bg:#eaf1fb;--amber:#895006;--amber-bg:#fff2da;--radius:20px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,textarea{font:inherit}a{color:var(--teal);text-underline-offset:4px}button,a,input,textarea{touch-action:manipulation}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.5}:focus-visible{outline:3px solid #3289dd;outline-offset:4px}h1,h2,h3,p{margin:0}h1,h2,h3{line-height:1.15;letter-spacing:-.035em}h1{font-size:clamp(38px,4.7vw,66px);max-width:780px}h2{font-size:clamp(28px,3vw,39px)}h3{font-size:21px}p+p{margin-top:12px}code,pre,.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}code{font-size:.88em;overflow-wrap:anywhere}p code,li code,td code{background:#edf3f1;padding:2px 5px;border-radius:4px}.wrap{max-width:1200px;margin:auto;padding:0 36px}.eyebrow{text-transform:uppercase;font-size:11px;font-weight:750;letter-spacing:.14em;color:var(--teal)}.muted{color:var(--muted)}.skip{position:absolute;top:-100px;left:12px;background:#fff;padding:12px;z-index:30}.skip:focus{top:10px}
+    .masthead{background:#fff;border-bottom:1px solid var(--line)}.masthead .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:76px}.brand{display:flex;align-items:center;gap:12px;font-weight:730;text-decoration:none;color:var(--ink)}.brandmark{width:37px;height:37px;display:grid;place-items:center;border-radius:11px;background:var(--ink);color:#b9efcf;font:700 13px ui-monospace,monospace}.topnote{font-size:12px;color:var(--muted)}.hero{display:grid;grid-template-columns:1.45fr 1fr;gap:50px;padding:62px 0 38px;align-items:center}.hero .eyebrow{margin-bottom:18px}.hero .lead{font-size:18px;color:var(--muted);max-width:650px;margin-top:22px}.pills{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}.pill{background:#e7eeeb;color:#3e5a60;border-radius:100px;padding:6px 11px;font-size:12px;font-weight:650}.entry-card{background:var(--ink);color:#fff;padding:28px;border-radius:var(--radius);box-shadow:0 18px 40px #123d3410}.entry-card .eyebrow{color:#a8dfbf}.entry-card h2{font-size:26px;margin:12px 0 22px}.entry-input{border:1px solid #547176;border-radius:12px;padding:14px 15px;margin-top:12px}.entry-input strong{display:block;font-size:14px}.entry-input span{font-size:12px;color:#c3d8d6}.entry-card .foot{font-size:13px;color:#c6ded8;margin-top:18px}.tag{display:inline-block;border-radius:6px;padding:3px 8px;font:750 11px/1.5 ui-monospace,monospace;letter-spacing:.04em}.tag.pass{background:var(--mint);color:var(--teal)}.tag.changed{background:var(--blue-bg);color:var(--blue)}.tag.error{background:var(--amber-bg);color:var(--amber)}
+    .jump{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 34px}.jump a{text-decoration:none;font-size:13px;font-weight:650;border:1px solid var(--line);background:#fff;padding:8px 15px;border-radius:9px}.jump a:hover{border-color:var(--teal)}.section{padding:38px 0;border-top:1px solid var(--line)}.section-head{display:flex;justify-content:space-between;align-items:end;gap:26px;margin-bottom:26px}.section-head .eyebrow{margin-bottom:10px}.section-head>p{max-width:350px;color:var(--muted);font-size:14px}.callout{border:1px solid #a3d4bb;background:#e9f7ee;border-radius:14px;padding:18px 22px;margin-bottom:26px;font-size:14px}.callout strong{color:#115d4d}.timeline{position:relative;margin:0;padding:0;list-style:none}.timeline:before{content:"";position:absolute;top:34px;bottom:50px;left:24px;width:1px;background:#b9d2c8}.step{position:relative;display:grid;grid-template-columns:50px 1fr;gap:23px;padding-bottom:18px}.step:last-child{padding-bottom:0}.step-number{position:relative;background:#fff;border:1px solid #b9d2c8;color:var(--teal);border-radius:50%;width:49px;height:49px;display:grid;place-items:center;font:700 16px ui-monospace,monospace;z-index:1}.step-body{background:#fff;border:1px solid var(--line);border-radius:16px;padding:23px 26px}.step-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em}.step-body>p{color:var(--muted);font-size:14px;margin-top:10px;max-width:860px}.step-body h3{font-size:21px}.lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-top:20px}.lane{border-radius:12px;padding:18px;background:#f4f8f6;border-top:3px solid var(--teal)}.lane.changed{background:#f4f7fc;border-color:var(--blue)}.lane.error{background:#fffbf2;border-color:#b77a2f}.lane h4{margin:12px 0 7px;font-size:16px;line-height:1.3}.lane p{font-size:13px;color:var(--muted)}.lane .lane-end{margin-top:13px;font-weight:700;font-size:12px;color:var(--teal)}.lane.changed .lane-end{color:var(--blue)}.lane.error .lane-end{color:var(--amber)}.step .checkpoint{font-size:12px;color:var(--teal);font-weight:650;margin-top:13px}.step-body .split-note{display:flex;gap:15px;margin-top:16px;flex-wrap:wrap}.split-note span{background:#edf3f1;border-radius:7px;padding:5px 9px;font-size:12px}
+    .field-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:22px}.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:27px}.panel h3{margin-bottom:14px}.panel>p{font-size:14px;color:var(--muted)}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;vertical-align:top;padding:13px 9px;border-bottom:1px solid var(--line)}th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}tr:last-child td{border-bottom:0}.example-fields{display:grid;gap:12px;margin-top:20px}.field-demo{border:1px solid var(--line);border-radius:11px;padding:15px}.field-demo small{display:block;font-size:11px;color:var(--muted);margin-bottom:8px}.field-demo code{font-size:17px}.field-demo .from{display:block;font-size:12px;color:var(--teal);margin-top:8px}.small-note{font-size:12px!important;color:var(--muted);margin-top:16px!important}.tabs{display:flex;gap:8px;margin:20px 0}.status-button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:9px;padding:8px 15px;font-size:12px;font-weight:750}.status-button[aria-pressed="true"]{background:var(--ink);color:white;border-color:var(--ink)}.scenario{border-left:3px solid var(--teal);background:#f3f8f5;padding:22px;border-radius:0 12px 12px 0;min-height:185px}.scenario[data-kind="changed"]{border-color:var(--blue);background:#f0f5fc}.scenario[data-kind="error"]{border-color:#b77a2f;background:#fffaee}.scenario h3{font-size:22px;margin-bottom:12px}.scenario p{font-size:14px;color:var(--muted)}.scenario .result{display:inline-block;font-size:12px;font-weight:700;margin-top:16px;color:var(--ink)}.dual{display:grid;grid-template-columns:1fr 1fr;gap:22px}.guard-list{padding:0;margin:20px 0 0;list-style:none}.guard-list li{padding:13px 0;border-top:1px solid var(--line);font-size:14px}.guard-list strong{display:block}.guard-list span{font-size:13px;color:var(--muted)}.filetree{background:#102c32;color:#d9f2e7;font-size:12px;line-height:1.9;padding:22px;border-radius:13px;margin:20px 0 15px;overflow:auto;white-space:pre}.filetree .dim{color:#a1b9b8}.output-list{display:grid;gap:13px;margin-top:16px}.output-list p{font-size:13px;color:var(--muted)}.output-list strong{display:block;color:var(--ink);font-size:14px}.starter{display:grid;grid-template-columns:.85fr 1.15fr;gap:32px}.starter label{display:block;font-size:13px;font-weight:700;margin:18px 0 6px}.starter label:first-child{margin-top:0}.starter input{width:100%;border:1px solid #adc5bc;padding:11px 12px;border-radius:8px;background:#fff;font-size:14px;color:var(--ink)}.helper{font-size:12px;color:var(--muted);margin-top:7px}.preview{background:#102c32;padding:24px;border-radius:16px;display:flex;flex-direction:column;gap:13px}.preview .eyebrow{color:#aedabd}.preview textarea{width:100%;resize:vertical;min-height:145px;background:transparent;border:0;color:#ecf6ef;font:13px/1.7 ui-monospace,monospace;padding:0}.preview textarea::placeholder{color:#b7ceca;opacity:1}.preview button{align-self:start;background:#d0efdb;border:0;color:#153b31;border-radius:8px;font-size:12px;font-weight:750;padding:9px 15px}.preview .copy-status{font-size:12px;color:#c7e2d7;min-height:20px}.guide-note{font-size:12px;color:var(--muted);margin-top:20px}.resources{display:flex;gap:16px;flex-wrap:wrap;margin-top:24px;font-size:13px}.footer{padding:28px 0 38px;border-top:1px solid var(--line);margin-top:28px;color:var(--muted);font-size:12px}.footer .wrap{display:flex;justify-content:space-between;gap:20px}
+    .panel,.step-body,.preview,.hero>*,.starter>*{min-width:0}
+    @media(max-width:900px){.hero{gap:25px;grid-template-columns:1fr 1fr}.entry-card{padding:23px}.lanes{grid-template-columns:1fr}.field-grid,.dual{grid-template-columns:1fr}.section-head{align-items:start}.step-meta{flex-wrap:wrap}.starter{gap:22px}}
+    @media(max-width:640px){.wrap{padding:0 19px}.masthead .wrap{min-height:65px}.topnote{display:none}.hero{grid-template-columns:1fr;gap:28px;padding-top:35px}.hero .lead{font-size:16px}.entry-card h2{font-size:24px}.section{padding:30px 0}.section-head{flex-direction:column;gap:13px}.section-head>p{max-width:none}.step{grid-template-columns:35px 1fr;gap:12px}.step-number{width:35px;height:35px;font-size:12px}.timeline:before{left:17px}.step-body{padding:19px 17px}.step-meta{font-size:10px;gap:5px}.step-body h3{font-size:19px}.panel{padding:21px}.starter{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.footer .wrap{flex-direction:column;gap:7px}th,td{padding:12px 5px;font-size:12px}.jump{gap:7px}.jump a{font-size:12px;padding:7px 10px}.filetree{font-size:10px;padding:16px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    @media print{body{background:#fff;font-size:11px}.wrap{max-width:none;padding:0}.hero{padding-top:25px}h1{font-size:38px}.jump,.starter,.resources,.skip{display:none}.section{padding:24px 0}.step,.panel,.entry-card{break-inside:avoid}.step-body,.panel{box-shadow:none}.footer{margin:0;padding:15px 0}.step-meta{font-size:9px}.scenario{min-height:0}.masthead .wrap{min-height:50px}}
+  </style>
+</head>
+<body>
+<a class="skip" href="#workflow">Skip to the workflow</a>
+<header class="masthead">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brandmark" aria-hidden="true">CF</span><span>CTF Correct Flags</span></a>
+    <span class="topnote">CISCO CTF &nbsp; / &nbsp; SKILL FIELD GUIDE</span>
+  </div>
+</header>
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">ctf-correct-flags</p>
+      <h1>CTF flag correction,<br>with evidence at every step.</h1>
+      <p class="lead">Turn a completed verification report into tested, verified mission answers. Audit every PASS row, apply CHANGED regexes, and keep a durable record of what happened.</p>
+      <div class="pills"><span class="pill">Any named Cisco CTF mission</span><span class="pill">Existing Chrome session</span><span class="pill">Verified change history</span></div>
+    </div>
+    <aside class="entry-card" aria-label="Required inputs for every run">
+      <p class="eyebrow">The entry point · every run</p>
+      <h2>A fresh artifact path.<br>An explicit mission.</h2>
+      <div class="entry-input"><strong>01 &nbsp; Artifact path</strong><span>The invoker supplies the report location for this run.</span></div>
+      <div class="entry-input"><strong>02 &nbsp; Exact mission name</strong><span>The invoker identifies the mission to audit and correct.</span></div>
+      <p class="foot">Missing path? The agent asks before proceeding. A previous run’s path never counts as a current input.</p>
+    </aside>
+  </div>
+  <nav class="jump" aria-label="Guide sections"><a href="#workflow">01 · Workflow</a><a href="#fields">02 · Report fields</a><a href="#decisions">03 · Status decisions</a><a href="#evidence">04 · Evidence</a><a href="#start">05 · Start a run</a></nav>
+
+  <section class="section" id="workflow" aria-labelledby="workflow-title">
+    <div class="section-head"><div><p class="eyebrow">01 · The workflow</p><h2>One report. A verified mission.</h2></div><p>The same original correction process, with an artifact path explicitly supplied for every invocation.</p></div>
+    <div class="callout"><strong>Every run starts with a path check.</strong> If you did not supply a path for this invocation, the agent asks: “What is the full path to the completed check-flags artifact for this run?” It never picks a remembered, default, or discovered report for you.</div>
+    <ol class="timeline">
+      <li class="step"><span class="step-number" aria-hidden="true">01</span><article class="step-body"><div class="step-meta"><span>Step 1 of 7</span><span>Where · Agent conversation</span></div><h3>Provide this run’s inputs.</h3><p>Share the full artifact path and exact Cisco CTF mission name with the skill invocation. If either is missing, the agent asks for it. A name already supplied during this task satisfies the mission requirement.</p><p class="checkpoint">Ready when: the artifact path was explicitly supplied for this run.</p></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">02</span><article class="step-body"><div class="step-meta"><span>Step 2 of 7</span><span>Where · Local artifact</span></div><h3>Inspect the report.</h3><p>The agent reads the completed check-flags artifact, preserves a snapshot and SHA-256 hash, and identifies all PASS, CHANGED, and ERROR rows. The report stays in its existing format. Missing, conflicting, or duplicate data needs resolution.</p><p class="checkpoint">Ready when: the report’s identity, contents, and coverage are understood.</p></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">03</span><article class="step-body"><div class="step-meta"><span>Step 3 of 7</span><span>Where · Your existing Chrome session</span></div><h3>Confirm the exact mission.</h3><p>The agent checks authentication and creator access at <code>play-security.ciscoctf.io</code>, then verifies the named mission in content management. It compares the report with history scoped by portal origin, mission UUID, and tenant.</p><p class="checkpoint">Ready when: the mission heading and stable identity match the intended target.</p></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">04</span><article class="step-body"><div class="step-meta"><span>Step 4 of 7</span><span>Where · Mission flag editors</span></div><h3>Process every report row.</h3><p>Match each flag by its question and stable UUID as well as its displayed number. Every status has a different purpose.</p><div class="lanes">
+        <div class="lane"><span class="tag pass">PASS</span><h4>Audit the live answer.</h4><p>Read the stored regex and case setting. Compare them with the verified baseline. A suggested alternative alone does not authorize an edit.</p><p class="lane-end">Continue to portal tests →</p></div>
+        <div class="lane changed"><span class="tag changed">CHANGED</span><h4>Enter the suggested regex.</h4><p>Record the live before value. Transfer the artifact’s Suggested Regex into Expected Flag (Answer), preserving the documented escaping.</p><p class="lane-end">Continue to portal tests →</p></div>
+        <div class="lane error"><span class="tag error">ERROR</span><h4>Record incomplete coverage.</h4><p>Preserve the previous baseline. Report missing or failed source evidence; do not invent an answer or correction.</p><p class="lane-end">Include in the final report →</p></div>
+      </div></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">05</span><article class="step-body"><div class="step-meta"><span>Step 5 of 7</span><span>Where · Portal answer tester</span></div><h3>Validate the answer behavior.</h3><p>Test the exact Actual Value and every stored durable acceptance/rejection example. Read the portal’s feedback for each test. A proposed correction must pass every required test before saving; a local regex check alone is insufficient.</p><p class="checkpoint">Failed test? Record the result and cancel the unsaved correction.</p></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">06</span><article class="step-body"><div class="step-meta"><span>Step 6 of 7</span><span>Where · The same flag’s editor</span></div><h3>Verify persistence.</h3><p>For CHANGED rows, Save once, inspect the flag-specific success message, and reopen the editor to verify the exact stored regex and unchanged case setting. Close verification with Cancel. If the intended regex is already stored, test and log it as already applied.</p><div class="split-note"><span>PASS audit → Cancel</span><span>CHANGED → Save → Reopen → Verify → Cancel</span></div></article></li>
+      <li class="step"><span class="step-number" aria-hidden="true">07</span><article class="step-body"><div class="step-meta"><span>Step 7 of 7</span><span>Where · Local run folder and journal</span></div><h3>Record the evidence.</h3><p>Save a per-flag report, observations, tests, and screenshot evidence. Append the change log using the prepare-time source hash. Advance the baseline only from eligible verified evidence; failed or unexplained drift retains the previous good baseline.</p><p class="checkpoint">Complete when: correction outcomes, PASS coverage, and unresolved issues are explicit.</p></article></li>
+    </ol>
+  </section>
+
+  <section class="section" id="fields" aria-labelledby="fields-title">
+    <div class="section-head"><div><p class="eyebrow">02 · Read the handoff correctly</p><h2>Pattern and test answer are separate.</h2></div><p>The artifact keeps its original format. Its values play distinct roles in the portal.</p></div>
+    <div class="field-grid">
+      <div class="panel"><h3>What each report field means</h3><table><thead><tr><th scope="col">Field</th><th scope="col">How the skill uses it</th></tr></thead><tbody>
+        <tr><td><strong>Actual Value</strong></td><td>The concrete answer entered into <strong>Test Flag (Answer)</strong>.</td></tr>
+        <tr><td><strong>Suggested Regex</strong></td><td>The expression entered into <strong>Expected Flag (Answer)</strong> for CHANGED rows.</td></tr>
+        <tr><td><strong>Expected Pattern</strong></td><td>The source report’s expected expression. The live editor supplies the actual before value.</td></tr>
+        <tr><td><strong>ID + Question</strong></td><td>Source identity clues, confirmed against the mission’s live flag UUID, title, and number.</td></tr>
+        <tr><td><strong>Status + Notes</strong></td><td>Determine correction/audit scope and identify source issues.</td></tr>
+      </tbody></table></div>
+      <div class="panel"><span class="tag changed">SYNTHETIC CHANGED EXAMPLE</span><h3 style="margin-top:16px">Two values. Two fields.</h3><p>The suggested expression belongs in the expected answer field. The observed answer belongs in the tester.</p><div class="example-fields">
+        <div class="field-demo"><small>EXPECTED FLAG (ANSWER)</small><code>^Example;\s?39$</code><span class="from">← Suggested Regex, with known display escaping decoded once</span></div>
+        <div class="field-demo"><small>TEST FLAG (ANSWER)</small><code>Example; 39</code><span class="from">← Exact Actual Value from the report</span></div>
+      </div><p class="small-note">Synthetic illustration only. A changing count such as 39 does not become a permanent policy example. Regex alternation pipes and literal backslashes must survive transfer intact.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="decisions" aria-labelledby="decisions-title">
+    <div class="section-head"><div><p class="eyebrow">03 · Explore the decisions</p><h2>A source PASS still needs a live audit.</h2></div><p>Choose a status to see the expected outcome. These examples do not connect to a report or portal.</p></div>
+    <div class="panel"><div role="group" aria-label="Explore a report status" class="tabs"><button type="button" class="status-button" aria-pressed="true" data-status="pass">PASS</button><button type="button" class="status-button" aria-pressed="false" data-status="changed">CHANGED</button><button type="button" class="status-button" aria-pressed="false" data-status="error">ERROR</button></div>
+      <div id="scenario" class="scenario" data-kind="pass" role="region" aria-label="Status decision explanation" aria-live="polite"><h3 id="scenario-title">Audit what the portal actually stores.</h3><p id="scenario-body">PASS means the source pattern accepted the observed answer. Read and test the live portal pattern against the baseline and durable examples. Keep the last good baseline if unexplained drift or a failing test appears.</p><span id="scenario-result" class="result">Outcome: audited and closed with Cancel; no routine answer edit.</span></div>
+      <noscript><p class="small-note"><strong>CHANGED:</strong> Apply Suggested Regex, test, Save once, reopen and verify. <strong>ERROR:</strong> Record incomplete coverage and preserve the prior baseline.</p></noscript>
+    </div>
+  </section>
+
+  <section class="section" id="evidence" aria-labelledby="evidence-title">
+    <div class="section-head"><div><p class="eyebrow">04 · Evidence and boundaries</p><h2>The result is more than a saved regex.</h2></div><p>The run report distinguishes verified changes, already applied answers, failures, and saved but unverified outcomes.</p></div>
+    <div class="dual">
+      <div class="panel"><h3>What stays on disk</h3><p>The original storage default is retained. Verified history is scoped to portal origin, mission UUID, and tenant.</p><pre class="filetree" aria-label="Run storage layout">~/ctf-flag-correction-runs/
+├── state/
+│   ├── change-log.jsonl  <span class="dim"># append-only events</span>
+│   └── baseline.json     <span class="dim"># verified state projection</span>
+└── &lt;timestamped-run&gt;/
+    ├── source snapshot + SHA-256
+    ├── observations + test results
+    ├── per-flag report
+    └── screenshot evidence</pre><div class="output-list"><p><strong>First run for a mission</strong>Establish a baseline from confirmed live identity and successful portal tests.</p><p><strong>Later runs for the same mission</strong>Compare with its verified baseline and retest stored acceptance/rejection examples.</p><p><strong>A different mission</strong>Its UUID and tenant scope keep its rules separate. No personal history is bundled with this skill.</p></div></div>
+      <div class="panel"><h3>When the agent stops a flag</h3><ul class="guard-list">
+        <li><strong>Mission or flag identity is ambiguous.</strong><span>Resolve the target or numbering mismatch before writing.</span></li>
+        <li><strong>A suggested expression fails validation.</strong><span>Recheck transcription/escaping once. Cancel if it still fails; report the supplied pattern and answer.</span></li>
+        <li><strong>Existing policy examples fail.</strong><span>Do not save a behavioral regression or silently remove accepted variants.</span></li>
+        <li><strong>Save completion is uncertain.</strong><span>Inspect the stored value before retrying. Dialog closure alone does not prove persistence.</span></li>
+        <li><strong>The session expires.</strong><span>You handle login in Chrome. The agent inspects the affected flag before resuming.</span></li>
+      </ul><p class="small-note">Question text, hints, points, visibility, answer type, and case sensitivity retain their existing values. Independent, unambiguous flags can continue when one flag has a problem.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="start" aria-labelledby="start-title">
+    <div class="section-head"><div><p class="eyebrow">05 · Start a run</p><h2>Give the agent today’s inputs.</h2></div><p>Use the prompt in your agent conversation. Supply a new artifact path for each run, even when the location is unchanged.</p></div>
+    <div class="panel"><div class="starter"><div>
+      <label for="artifact-path">Artifact path · required for this run</label><input id="artifact-path" type="text" autocomplete="off" spellcheck="false" placeholder="/path/to/completed-results.md" aria-describedby="artifact-help"><p class="helper" id="artifact-help">Use the full local path that your agent can read.</p>
+      <label for="mission-name">Exact Cisco CTF mission name</label><input id="mission-name" type="text" autocomplete="off" placeholder="Your mission’s exact name" aria-describedby="mission-help"><p class="helper" id="mission-help">The agent verifies this mission in your authenticated Chrome session.</p>
+    </div><div class="preview"><p class="eyebrow">Invocation preview</p><textarea id="invocation" aria-label="Generated skill invocation" readonly placeholder="Enter the artifact path and mission name to build an invocation."></textarea><button id="copy-prompt" type="button" disabled>Copy invocation</button><p id="copy-status" class="copy-status" aria-live="polite"></p></div></div>
+      <p class="guide-note">This builder is local and stores no inputs. It does not read an artifact or execute corrections. Executing the skill authorizes answer updates in the named mission; a request to audit, review, or teach should state that intended scope.</p>
+      <noscript><p class="small-note">Use this template in your agent conversation: <code>Use $ctf-correct-flags for mission "MISSION NAME". The completed artifact for this run is at "/FULL/PATH/TO/REPORT.md". Audit all PASS rows, apply CHANGED suggested regexes, verify saved changes, and record the results.</code></p></noscript>
+      <div class="resources"><a href="README.md">Readme and setup</a><a href="SKILL.md">Skill instructions</a><a href="references/portal-workflow.md">Portal workflow reference</a><a href="references/change-log.md">Baseline and journal reference</a></div>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="wrap"><span><strong>ctf-correct-flags</strong> · Visual overview and workflow guide</span><span>Self-contained · Works offline · No external assets</span></div></footer>
+<script>
+  const scenarios = {
+    pass: {title: 'Audit what the portal actually stores.', body: 'PASS means the source pattern accepted the observed answer. Read and test the live portal pattern against the baseline and durable examples. Keep the last good baseline if unexplained drift or a failing test appears.', result: 'Outcome: audited and closed with Cancel; no routine answer edit.'},
+    changed: {title: 'Apply the supplied Suggested Regex.', body: 'Confirm the flag’s identity, record the live before value, and enter Suggested Regex faithfully. Test Actual Value and all durable examples. Save once, inspect success, reopen, and verify the raw saved regex and unchanged case setting. An identical stored pattern is tested and logged as already applied.', result: 'Outcome: verified correction, already applied, or an explicit failure/verification issue.'},
+    error: {title: 'Preserve the baseline and expose the gap.', body: 'An ERROR row does not establish a verified answer or a correction. Keep its previous baseline and report incomplete coverage. Flags missing from the artifact are also recorded as coverage gaps; unrelated unambiguous rows can proceed.', result: 'Outcome: incomplete coverage, with prior verified state retained.'}
+  };
+  document.querySelectorAll('[data-status]').forEach(button => {
+    button.addEventListener('click', () => {
+      const kind = button.dataset.status;
+      document.querySelectorAll('[data-status]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+      document.getElementById('scenario').dataset.kind = kind;
+      document.getElementById('scenario-title').textContent = scenarios[kind].title;
+      document.getElementById('scenario-body').textContent = scenarios[kind].body;
+      document.getElementById('scenario-result').textContent = scenarios[kind].result;
+    });
+  });
+  const artifact = document.getElementById('artifact-path');
+  const mission = document.getElementById('mission-name');
+  const invocation = document.getElementById('invocation');
+  const copy = document.getElementById('copy-prompt');
+  const feedback = document.getElementById('copy-status');
+  function updatePrompt() {
+    const ready = artifact.value.trim() && mission.value.trim();
+    // Quoted values are plain agent instructions, never executable shell text.
+    invocation.value = ready ? `Use $ctf-correct-flags for mission ${JSON.stringify(mission.value.trim())}. The completed check-flags artifact for this run is at ${JSON.stringify(artifact.value.trim())}. Audit all PASS rows, apply CHANGED suggested regexes, verify saved changes, and record the results.` : '';
+    copy.disabled = !ready;
+    feedback.textContent = '';
+  }
+  artifact.addEventListener('input', updatePrompt);
+  mission.addEventListener('input', updatePrompt);
+  copy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(invocation.value);
+      feedback.textContent = 'Copied. Paste into your agent conversation.';
+    } catch {
+      invocation.focus();
+      invocation.select();
+      feedback.textContent = 'Text selected. Use your browser’s Copy command.';
+    }
+  });
+  // Inputs are intentionally never saved or restored across guide visits.
+  artifact.value = '';
+  mission.value = '';
+  updatePrompt();
+</script>
+</body>
+</html>
